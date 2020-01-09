@@ -1,6 +1,9 @@
 package GUI;
 
 import LOGIC.MainLogic;
+import javafx.event.EventHandler;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -13,7 +16,7 @@ public class Tile extends StackPane {
     public boolean hasBomb;
     public boolean isOpen = false;
 
-    private Rectangle border = new Rectangle(MainLogic.getInstance().TILE_SIZE - 2, MainLogic.getInstance().TILE_SIZE - 2);
+    public Rectangle border = new Rectangle(MainLogic.getInstance().TILE_SIZE - 2, MainLogic.getInstance().TILE_SIZE - 2);
     public Text text = new Text();
 
     public Tile(){ }
@@ -41,6 +44,9 @@ public class Tile extends StackPane {
     public void open() {
         if (isOpen)
             return;
+        if(MainLogic.getInstance().map[x][y] == 0){
+            border.setFill(null);
+        }
 
         isOpen = true;
         text.setVisible(true);

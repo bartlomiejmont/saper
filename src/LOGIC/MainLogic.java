@@ -1,7 +1,9 @@
 package LOGIC;
 
+import GUI.Main;
 import GUI.Tile;
 import javafx.scene.Group;
+import javafx.scene.paint.Color;
 import javafx.stage.Window;
 
 import java.util.ArrayList;
@@ -29,8 +31,8 @@ public final class MainLogic {
     public final int TILE_SIZE = 80;
     public final int W = 800;
     public final int H = 600;
-    public Stack moves = new Stack();
-    public Stack undoMoves = new Stack();
+    public Stack <Tile> moves = new Stack<Tile>();
+    public Stack <Tile> undoMoves = new Stack <Tile>();
 
     public int X_TILES = 7;
     public int Y_TILES = 7;
@@ -71,38 +73,32 @@ public final class MainLogic {
         return group;
     }
 
-    public List<Tile> getNeighbors(Tile tile) {
-        List<Tile> neighbors = new ArrayList<>();
 
-        // ttt
-        // tXt
-        // ttt
-
-        int[] points = new int[] {
-                -1, -1,
-                -1, 0,
-                -1, 1,
-                0, -1,
-                0, 1,
-                1, -1,
-                1, 0,
-                1, 1
-        };
-
-        for (int i = 0; i < points.length; i++) {
-            int dx = points[i];
-            int dy = points[++i];
-
-            int newX = tile.x + dx;
-            int newY = tile.y + dy;
-
-            if (newX >= 0 && newX < X_TILES
-                    && newY >= 0 && newY < Y_TILES) {
-                neighbors.add(grid[newX][newY]);
+    public void redo(){
+        if(MainLogic.getInstance().undoMoves.size()>0){
+            Tile tile = MainLogic.getInstance().undoMoves.peek();
+            if(MainLogic.getInstance().map[tile.x][tile.y] == 0){
+                tile.border.setFill(null);
             }
+            MainLogic.getInstance().undoMoves.pop();
+            MainLogic.getInstance().moves.push(tile);
+            tile.isOpen=true;
+            tile.text.setVisible(true);
         }
+    }
 
-        return neighbors;
+    public void undo(){
+        if(MainLogic.getInstance().moves.size()>0){
+            Tile tile = MainLogic.getInstance().moves.peek();
+            if(MainLogic.getInstance().map[tile.x][tile.y] == 0){
+                tile.border.setFill(Color.BLACK);
+            }
+            MainLogic.getInstance().moves.pop();
+            MainLogic.getInstance().undoMoves.push(tile);
+            tile.isOpen=false;
+            tile.text.setVisible(false);
+
+        }
     }
 
 
